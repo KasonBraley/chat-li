@@ -1,11 +1,2 @@
-node_modules/
 .env
-
-# Yarn Integrity file
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
+gorm.db
