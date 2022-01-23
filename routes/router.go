@@ -1,14 +1,17 @@
 package routes
 
 import (
-	"github.com/KasonBraley/chat-li/controllers"
+	"github.com/KasonBraley/chat-li/socket"
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter() *gin.Engine {
+func SetupRouter(hub *socket.Hub) *gin.Engine {
 	r := gin.Default()
 	r.GET("/", rootHandler)
-	r.GET("/shows/search", controllers.FindShows)
+	// r.GET("/shows/search", controllers.FindShows)
+	r.GET("/ws", func(c *gin.Context) {
+		socket.ServeWs(hub, c.Writer, c.Request)
+	})
 
 	/* create api group around /rooms endpoint
 	   get('/', getAllRooms);
