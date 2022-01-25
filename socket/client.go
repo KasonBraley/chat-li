@@ -33,23 +33,21 @@ var upgrader = websocket.Upgrader{
 
 // Client is a middleman between the websocket connection and the hub.
 type Client struct {
-	hub *Hub
-	// The websocket connection.
+	Name string    `json:"name"`
+	ID   uuid.UUID `json:"id"`
+	hub  *Hub
 	conn *websocket.Conn
 	// Buffered channel of outbound messages.
 	send  chan []byte
 	rooms map[*Room]bool
-	Name  string    `json:"name"`
-	ID    uuid.UUID `json:"id"`
 }
 
 func newClient(conn *websocket.Conn, hub *Hub, name string) *Client {
-
 	return &Client{
-		ID:    uuid.New(),
 		Name:  name,
-		conn:  conn,
+		ID:    uuid.New(),
 		hub:   hub,
+		conn:  conn,
 		send:  make(chan []byte, 256),
 		rooms: make(map[*Room]bool),
 	}
@@ -132,7 +130,7 @@ func (c *Client) writePump() {
 	}
 }
 
-// serveWs handles websocket requests from the peer.
+// ServeWs handles websocket requests from the peer.
 func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	name, ok := r.URL.Query()["name"]
 
@@ -140,7 +138,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		log.Println("Url Param 'name' is missing")
 		return
 	}
-	log.Printf("%s connected", name)
+	log.Printf("%s connected", name[0])
 
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {

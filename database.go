@@ -1,7 +1,6 @@
-package database
+package main
 
 import (
-	"github.com/KasonBraley/chat-li/models"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -16,7 +15,7 @@ func ConnectDatabase() {
 		panic("Failed to connect to database!")
 	}
 
-	database.AutoMigrate(&models.Show{})
+	database.AutoMigrate(&Room{}, &User{})
 
 	DB = database
 }
